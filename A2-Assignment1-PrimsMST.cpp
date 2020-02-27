@@ -6,6 +6,8 @@
 #include <vector>
 #include <set>
 #include <assert.h>
+#include <chrono>
+#include <thread>
 using namespace std;
 
 struct node;
@@ -17,13 +19,19 @@ struct edge{
   bool used = false;
 };
 
+/*
+tested:
+3704858
+-3612829 WORKS
+*/
+
 struct edgeComp{
   bool operator()(const edge* a, const edge* b)
   {
     if(a->cost < b->cost)
-    return false;
-
     return true;
+
+    return false;
   }
 };
 
@@ -43,8 +51,8 @@ void iterate()
   
   assert(pioneers.size() > 0);
   
-  edge* e = *pioneers.rbegin();
-  pioneers.erase(e);
+  edge* e = *pioneers.begin();
+  pioneers.erase(pioneers.begin());
   
   if(!e->a->discovered)
   {
@@ -79,7 +87,7 @@ void iterate()
 
 int main()
 {
-  fstream f("tess.txt");
+  fstream f("test.txt");
   int NODES, EDGES;
   f>>NODES>>EDGES;
   for(int i = 0; i<NODES; ++i)
@@ -110,8 +118,10 @@ int main()
     if(DISCOVERED == nodes.size())
     break;
     iterate();
-    printf("ok");
+    printf("%d\n",totalCost);
+   // printf("%d %d %d\n",DISCOVERED,nodes.size(),pioneers.size());
+   std::this_thread::sleep_for(std::chrono::milliseconds(2));
   }
-  printf("%d\n",totalCost);
+  printf("Total cost: %d\n",totalCost);
 
 }
