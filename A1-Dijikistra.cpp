@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <assert.h>
 #include <vector>
+#include <iostream>
+#include <sstream>
+#include <fstream>
 using namespace std;
 
 struct node;
@@ -38,35 +41,31 @@ int main()
     nodes.push_back(new node);
   }
 
-  FILE *f = fopen("dijkstraData.txt","r");
-  assert(f != NULL);
+ fstream f("dijkstraData.txt");
 
-  int sID = 0;
-  int rID = 0;
-  int weight = 0;
-  char check = ' ';
-  for(int i = 0; i<200; ++i)
-  {   
-    fscanf(f,"%d",&sID);
-   
+  string s;
+  stringstream ss;
+
+  int sender,receiver,weight;
+
+for(int i = 0; i<200; ++i)
+{
+  for(;;)
+  {
+    getline(f,s);
+    ss.clear();
+    ss.str("");
+    ss<<s;
+    
+    
+    
     for(;;)
     {
-      fscanf(f,"%c",&check);
-      if(check == ' ')
-      {
-        printf("exiting");
-        break;  
-      }
-
-      fscanf(f,"%d",&rID);
-      fgetc(f);
-      fscanf(f,"%d",&weight);
-
-      assert(sID-1 == i);
-      connect(nodes[i],nodes[rID-1],weight);
-      printf("connecting %d and %d",i+1,sID);
+      
     }
   }
+}
 
+f.close();
 
 }
