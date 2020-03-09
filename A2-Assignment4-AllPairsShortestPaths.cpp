@@ -62,6 +62,7 @@ int main() {
     connect(from-1,to-1,weight);
   //  printf("Connecting %d and %d with weight %d\n",from,to,weight);
   }
+  fclose(f);
 
   //PHASE I: REWEIGHTING
 
@@ -149,4 +150,16 @@ int main() {
     }
   }
   printf("done.");
+
+  f = fopen("test.txt","w");
+  for(int i = 0; i<N+1; ++i)
+  {
+    for(int x = 0; x<N; ++x)
+    {
+      fprintf(f,"%d ",shortestPaths[i][x]);
+    }
+    fprintf(f,"\n");
+  }
+  fclose(f);
+
 }
