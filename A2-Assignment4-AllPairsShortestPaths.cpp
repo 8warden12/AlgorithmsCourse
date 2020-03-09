@@ -4,6 +4,8 @@
 #include <map>
 using namespace std;
 
+#define min(a,b) (a<b ? a : b)
+
 //all pairs shortest paths
 
 struct node;
@@ -64,8 +66,10 @@ int main() {
   //PHASE I: REWEIGHTING
 
   //add a new vertex that will function as the source
-  nodes.push_back(new node);
-
+  node* source = new node;
+  source->index = N;
+  nodes.push_back(source);
+  assert(source == nodes[nodes.size()-1]);
   for(int i = 0; i<nodes.size()-1; ++i)
   {
     //create an arc of length 0 from the source to every other vertex
@@ -88,14 +92,61 @@ int main() {
     {
       //get minimum for case 2 (when you find a different path and don't reuse the //one from the previous iteration)
       
-      int minLength = -99;
+      int minLength = 99999999;
+      //get the min length
       for(int w = 0; w<nodes[v]->inbound.size(); ++w)
       {
-        if(shortestPaths[i-1][w] + )
+        //glorious
+        if(shortestPaths[i-1][nodes[v]->inbound[w]->from->index] + nodes[v]->inbound[w]->weight < minLength)
+        {
+          minLength = shortestPaths[i-1][nodes[v]->inbound[w]->from->index] + nodes[v]->inbound[w]->weight;
+        }
       }
 
+      shortestPaths[i][v] = min(shortestPaths[i-1][v], minLength);
+      //printf("sp[%d][%d] = %d\n",i,v,shortestPaths[i][v]);
     }
+
   }
 
+  
+
   //final iteration to detect negative cycles:
+
+  //cycle through all the vertices, including the source vertex
+
+  int i = N;
+  for(int v = 0; v<N+1; ++v)
+  {
+    //get minimum for case 2 (when you find a different path and don't reuse the //one from the previous iteration)
+    
+    int minLength = 99999999;
+    //get the min length
+    for(int w = 0; w<nodes[v]->inbound.size(); ++w)
+    {
+      //glorious
+      if(shortestPaths[i-1][nodes[v]->inbound[w]->from->index] + nodes[v]->inbound[w]->weight < minLength)
+      {
+        minLength = shortestPaths[i-1][nodes[v]->inbound[w]->from->index] + nodes[v]->inbound[w]->weight;
+      }
+    }
+
+    shortestPaths[i][v] = min(shortestPaths[i-1][v], minLength);
+    //printf("sp[%d][%d] = %d\n",i,v,shortestPaths[i][v]);
+  }
+
+
+  //if any of the shortestPath values have changed between the N-1th and the Nth iterations, a negative cycle exists
+  for(int i = 0; i<nodes.size(); ++i)
+  {
+    if(shortestPaths[N-1][i] != shortestPaths[N][i])
+    {
+      printf("%d %d\n",shortestPaths[N-1][i],shortestPaths[N][i]);
+      assert(shortestPaths[N][i] < shortestPaths[N-1][i]);
+     // printf("NEGATIVE CYCLE DETECTED.\n");
+    }else{
+      printf("GOOD: %d %d\n",shortestPaths[N-1][i],shortestPaths[N][i]);
+    }
+  }
+  printf("done.");
 }
