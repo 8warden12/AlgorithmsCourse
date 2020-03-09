@@ -4,7 +4,7 @@
 #include <map>
 using namespace std;
 
-#define min(a,b) (a<b ? a : b)
+#define min(a,b) ((a<b) ? a : b)
 
 //all pairs shortest paths
 
@@ -88,8 +88,8 @@ int main() {
   //where i is the number of edges used
   for(int i = 1; i<N; ++i)
   {
-    //cycle through all the vertices, including the source vertex
-    for(int v = 0; v<N+1; ++v)
+    //cycle through all the vertices, not including the source vertex (since i t only has outbound arcs)
+    for(int v = 0; v<N; ++v)
     {
       //get minimum for case 2 (when you find a different path and don't reuse the //one from the previous iteration)
       
@@ -104,6 +104,7 @@ int main() {
         }
       }
 
+   //   printf("Comparing %d and %d\n",shortestPaths[i-1][v],minLength);
       shortestPaths[i][v] = min(shortestPaths[i-1][v], minLength);
       //printf("sp[%d][%d] = %d\n",i,v,shortestPaths[i][v]);
     }
