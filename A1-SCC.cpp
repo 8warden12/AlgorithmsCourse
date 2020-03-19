@@ -88,7 +88,7 @@ stack<node*> toBeExplored;
 
 void explore_stack(node* n)
 {
-//	printf("Exploring %d\n",n->index);
+	printf("Exploring %d\n",n->index);
 	assert(toBeExplored.size() == 0);
 	n->explored = true;
 	n->leader = leader;
@@ -100,9 +100,9 @@ void explore_stack(node* n)
 		if(toBeExplored.size() <= 0)
 		break;
 	//	if(toBeExplored.size() % 1000 < 10)
-	//	printf("%d\n",toBeExplored.size());
+		printf("TBEsize: %d\n",toBeExplored.size());
 		node* t = toBeExplored.top();
-
+		printf("TOPID: %d\n",t->index);
 	//	printf("%d\n",t->status);
 		if(t->status == 0)
 		{
@@ -111,12 +111,15 @@ void explore_stack(node* n)
 			
 			if(!FIRST_PASS)
 			{
+				printf("OS: %d IS: %d\n",t->outbound.size(),t->inbound.size());
 				for(int i = 0; i<n->outbound.size(); ++i)
 				{
-					if(!n->outbound[i]->to->explored && n->outbound[i]->to->status == 0)	
+					printf("%d has an outbound to %d\n",t->index,t->outbound[i]->to->index);
+					if(!t->outbound[i]->to->explored && t->outbound[i]->to->status == 0)	
 					{
-						n->outbound[i]->to->explored = true;
-						toBeExplored.push(n->outbound[i]->to);
+						t->outbound[i]->to->explored = true;
+						toBeExplored.push(t->outbound[i]->to);
+						printf("Pushed %d\n",t->outbound[i]->to->index);
 						//explore(n->outbound[i]->to);
 					}
 				}	
@@ -126,10 +129,10 @@ void explore_stack(node* n)
 		//		printf("SIZE: %d\n",n->inbound.size());
 				for(int i = 0; i<n->inbound.size(); ++i)
 				{
-					if(!n->inbound[i]->from->explored && n->inbound[i]->to->status == 0)
+					if(!t->inbound[i]->from->explored && t->inbound[i]->to->status == 0)
 					{
-						n->inbound[i]->from->explored = true;
-						toBeExplored.push(n->inbound[i]->from);
+						t->inbound[i]->from->explored = true;
+						toBeExplored.push(t->inbound[i]->from);
 						//explore(n->inbound[i]->from);
 					}
 				}	
@@ -193,7 +196,7 @@ void DFS_Loop_1()
 		{
 		//	printf("exploring %d\n",nodes[i]->index);
 			leader = nodes[i];
-			explore(nodes[i]);
+			explore_stack(nodes[i]);
 		}
 	}
 }
@@ -217,7 +220,7 @@ void DFS_Loop_2()
 		if(!n->explored)
 		{
 			CURRENT_SCC_SIZE = 0;
-			explore(n);
+			explore_stack(n);
 			SCC_sizes.insert(CURRENT_SCC_SIZE);
 			printf("Inserting %d\n",CURRENT_SCC_SIZE);
 		}
@@ -249,10 +252,11 @@ int main()
 		fscanf(f,"%d %d\n",&from,&to);
 		if(feof(f))
 		{
+		//	printf("Connecting %d to %d\n",from,to);
 			connect(nodes[from-1],nodes[to-1]);
 			break;
 		}
-		
+	//	printf("Connecting %d to %d\n",from,to);
 		connect(nodes[from-1],nodes[to-1]);
 	}
 	fclose(f);	
@@ -283,7 +287,3 @@ int main()
 		printf("%d\n",*i);
 	}
 }
-
-
-
-
