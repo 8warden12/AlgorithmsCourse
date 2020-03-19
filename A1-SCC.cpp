@@ -155,17 +155,17 @@ void explore_stack(node* n)
 
 void explore(node* n)
 {
-	//printf("Exploring %d\n",n->index);
+	printf("Exploring %d\n",n->index);
 	
 	n->explored = true;
 	n->leader = leader;
 	
 	if(!FIRST_PASS)
 	{
-	//	printf("here2 %d %d\n",n->outbound.size(),n->inbound.size());
+		printf("here %d %d\n",n->outbound.size(),n->inbound.size());
 		for(int i = 0; i<n->outbound.size(); ++i)
 		{
-	//		printf("asdasdasd: %d %d\n",n->index,n->outbound[i]->to->index);
+			printf("asdasdasd: %d %d\n",n->index,n->outbound[i]->to->index);
 			if(!n->outbound[i]->to->explored)	
 			{
 				explore(n->outbound[i]->to);
@@ -193,7 +193,7 @@ void DFS_Loop_1()
 		{
 		//	printf("exploring %d\n",nodes[i]->index);
 			leader = nodes[i];
-			explore_stack(nodes[i]);
+			explore(nodes[i]);
 		}
 	}
 }
@@ -217,7 +217,7 @@ void DFS_Loop_2()
 		if(!n->explored)
 		{
 			CURRENT_SCC_SIZE = 0;
-			explore_stack(n);
+			explore(n);
 			SCC_sizes.insert(CURRENT_SCC_SIZE);
 			printf("Inserting %d\n",CURRENT_SCC_SIZE);
 		}
@@ -246,7 +246,7 @@ int main()
 	
 	for(;;)
 	{
-		fscanf(f,"%d %d\n",&to,&from);
+		fscanf(f,"%d %d\n",&from,&to);
 		if(feof(f))
 		{
 			connect(nodes[from-1],nodes[to-1]);
