@@ -112,7 +112,7 @@ void explore_stack(node* n)
 			if(!FIRST_PASS)
 			{
 				printf("OS: %d IS: %d\n",t->outbound.size(),t->inbound.size());
-				for(int i = 0; i<n->outbound.size(); ++i)
+				for(int i = 0; i<t->outbound.size(); ++i)
 				{
 					printf("%d has an outbound to %d\n",t->index,t->outbound[i]->to->index);
 					if(!t->outbound[i]->to->explored && t->outbound[i]->to->status == 0)	
@@ -127,7 +127,7 @@ void explore_stack(node* n)
 		
 			}else{
 		//		printf("SIZE: %d\n",n->inbound.size());
-				for(int i = 0; i<n->inbound.size(); ++i)
+				for(int i = 0; i<t->inbound.size(); ++i)
 				{
 					if(!t->inbound[i]->from->explored && t->inbound[i]->to->status == 0)
 					{
